@@ -90,7 +90,7 @@ static int cmd_si(char *args) {
 
   if (N > 0){
     //cpu_exec(N);
-    printf("execute n steps!\n");
+    printf("execute %d steps!\n", N);
   }
   else {
     printf("error args[%s] of command si\n", args);
