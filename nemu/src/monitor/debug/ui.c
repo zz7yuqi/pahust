@@ -103,13 +103,13 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char * args){
-  if (args == NULL){
-    printf("error args.\n");
-  }
   /* print reg_info when argument is r 
    * print watchpoint_info when argument is w
    */
-  if (strcmp(args, "r") == 0){
+  if (args == NULL){
+    printf("error args.\n");
+  }
+  else if (strcmp(args, "r") == 0){
     isa_reg_display();
   }
   else if (strcmp(args, "w") == 0){
@@ -118,6 +118,8 @@ static int cmd_info(char * args){
   else {
     printf("error args.\n");
   }
+  
+  
 
   return 0;
 }
