@@ -8,7 +8,15 @@ const char *regsl[] = {
 };
 
 void isa_reg_display() {
-  printf("reg_display:\n");
+  //printf("reg_display:\n");
+  int index;
+  for (int i = 0; i < 4; i ++) {
+    for (int j = 0; j < 8; j ++) {
+      index = i * 8 + j;
+      printf("%4s: %8x ", regsl[index], reg_l(index));
+    }
+    printf("\n");
+  }
 }
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {
