@@ -40,6 +40,8 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
+static int cmd_info(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -49,6 +51,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Execute N instructions, then stop the program", cmd_si },
+  { "info", "Print register information when \"info r\", print watch point when \"info w\"", cmd_info},
 
   /* TODO: Add more commands */
 
@@ -98,6 +101,24 @@ static int cmd_si(char *args) {
 
   return 0;
 }
+
+static int cmd_info(char * args){
+  /* print reg_info when argument is r 
+   * print watchpoint_info when argument is w
+   */
+  if (strcmp(args, "r") == 0){
+    isa_reg_display();
+  }
+  else if (strcmp(args, "w") == 0){
+
+  }
+  else {
+    printf("error args.\n");
+  }
+
+  return 0;
+}
+
 
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
