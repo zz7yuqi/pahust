@@ -38,6 +38,8 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -46,6 +48,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "Execute N instructions, then stop the program", cmd_si },
 
   /* TODO: Add more commands */
 
@@ -76,6 +79,26 @@ static int cmd_help(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args) {
+  int N;
+  /* N is 1 when args is NULL */
+  if (args == NULL) N = 1;
+  else {
+    /* N == 0 when args is unknown */
+    if (sscanf(args, "%d", &N) < 1) N = 0;
+  }
+
+  if (N > 0){
+    //cpu_exec(N);
+    printf("execute n steps!\n");
+  }
+  else {
+    printf("error args[%s] of command si\n", args);
+  }
+
+  return 0;
+}
+
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
     cmd_c(NULL);
@@ -83,6 +106,7 @@ void ui_mainloop(int is_batch_mode) {
   }
 
   for (char *str; (str = rl_gets()) != NULL; ) {
+    /* position of the last character of the command */
     char *str_end = str + strlen(str);
 
     /* extract the first token as the command */
@@ -93,6 +117,7 @@ void ui_mainloop(int is_batch_mode) {
      * which may need further parsing
      */
     char *args = cmd + strlen(cmd) + 1;
+    /* no args in command */
     if (args >= str_end) {
       args = NULL;
     }
