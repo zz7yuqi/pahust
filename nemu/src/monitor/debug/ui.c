@@ -103,6 +103,9 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char * args){
+  if (args == NULL){
+    printf("error args.\n");
+  }
   /* print reg_info when argument is r 
    * print watchpoint_info when argument is w
    */
