@@ -134,6 +134,132 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parentheses(int p, int q, bool *legal) {
+  int i, pre = -1, last = -1;
+  int stack[32];
+  int head = -1;
+
+  for (i = p; i <= q; i++) {
+    if (tokens[i].type == '(') {
+      stack[++head] = i;
+    }
+    else if (tokens[i].type == ')') {
+      if (head <= -1) {
+        //bad expr
+        *legal = false;
+        return false;
+      }
+      pre = stack[head];    // head >= 0
+      last = i;
+      head--;
+    }
+  }
+
+  /* when the stack is empty (head < 0) and pre==p && last == q
+   * return true and legal.
+   * when the stack is empty but pre != p
+   * return false and legal
+   */
+  if (head < 0) {
+    *legal = true;
+
+    if (pre == p && last == q) 
+      return true;
+    else 
+      return false;
+  }
+  else {
+    // '(' > '(' illegal
+    *legal = false;
+    return false;
+  }
+
+  return false;
+}
+
+uint32_t eval(int p, int q, bool *legal) {
+  int res, i, op;
+  if (p > q) {
+    *legal = false;
+    return -1;
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    if (tokens[p].type != TK_NUM) {
+      *legal = false;
+      return -1;
+    }
+    else {
+      sscanf(tokens[p].str, "%d", &res);
+      *legal = true;
+      return res;
+    }
+  }
+  else if (check_parentheses(p, q, legal) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1, legal);
+  }
+  else {
+    if (*legal == false) return -1;
+
+    // Find main op.
+    int numOfParentheses = 0;
+    char preOp = 0;
+    op = p;
+    for (i = p; i <= q; i++) {
+      if ( (tokens[i].type == '+' || tokens[i].type == '-') 
+            && (numOfParentheses == 0)) {
+
+        preOp = tokens[i].type;
+        op = i;
+      }
+      else if ( (tokens[i].type == '*' || tokens[i].type == '/') 
+            && (numOfParentheses == 0)) {
+              
+        if (preOp == 0 || preOp == '*' || preOp == '/') {
+          preOp = tokens[i].type;
+          op = i;
+        }
+      }
+      else if (tokens[i].type == '(') numOfParentheses++;
+      else if (tokens[i].type == ')') numOfParentheses--;
+    }
+    
+    int val1 = eval(p, op - 1, legal);
+    int val2 = eval(op + 1, q, legal);
+
+    if (*legal == false) return -1;
+
+    switch (tokens[op].type)
+    {
+    case '+': *legal = true;
+              return (val1 + val2);
+              break;
+    case '-': *legal = true;
+              return (val1 - val2);
+              break;
+    case '*': *legal = true;
+              return (val1 * val2);
+              break;
+    case '/': *legal = true;
+              return (val1 / val2);
+              break;
+    default:
+      *legal = false;
+      return -1;
+      break;
+    }
+
+  }
+
+  return 0;
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -141,7 +267,8 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  //TODO();
+  return eval(0, nr_token - 1, success);
 
   return 0;
 }
