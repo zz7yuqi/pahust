@@ -284,7 +284,7 @@ uint32_t eval(int p, int q, bool *legal) {
   uint32_t val2 = eval(op + 1, q, legal);
   Log("val2 is %d.", val2);
 
-  if (*legal == false) return -1;
+  //if (*legal == false) return -1;
 
   switch (tokens[op].type)
   {
