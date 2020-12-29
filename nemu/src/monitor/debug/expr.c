@@ -224,6 +224,7 @@ uint32_t eval(int p, int q, bool *legal) {
   Log("Eval begin.");
   int res, i, op;
   if (p > q) {
+    Log("In eval, p>q.");
     *legal = false;
     return -1;
   }
