@@ -228,6 +228,7 @@ uint32_t eval(int p, int q, bool *legal) {
     return -1;
   }
   else if (p == q) {
+    Log("In eval, p==q.");
     /* Single token.
      * For now this token should be a number.
      * Return the value of the number.
