@@ -198,7 +198,6 @@ bool check_parentheses(int p, int q, bool *legal) {
    * when the stack is empty but pre != p
    * return false and legal
    */
-  printf("!\n");
   if (head == 0) {
     *legal = true;
 
@@ -247,7 +246,7 @@ uint32_t eval(int p, int q, bool *legal) {
       return res;
     }
   }
-  else if (check_parentheses(p, q, legal) == true) {
+  if (check_parentheses(p, q, legal) == true) {
     Log("check_parentheses is true.");
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
@@ -255,51 +254,56 @@ uint32_t eval(int p, int q, bool *legal) {
     return eval(p + 1, q - 1, legal);
   }
   else {
-    Log("To find main oprator.");
-    if (*legal == false) return -1;
-    // Find main op.
-    int numOfParentheses = 0;
-    int preOp = -1;
-    op = -1;
-    for (i = p; i <= q; i++) {
-      if ( isCulOp(tokens[i].type) 
-            && (numOfParentheses == 0)) {
-
-        if (op == -1) op = i;
-        else if (comparePriorityOfOp(tokens[i].type, tokens[op].type) <= 0) op = i;
-      }
-      else if (tokens[i].type == TK_LKH) numOfParentheses++;
-      else if (tokens[i].type == TK_RKH) numOfParentheses--;
-    }
-
-    
-    // Main op is found.
-    int val1 = eval(p, op - 1, legal);
-    int val2 = eval(op + 1, q, legal);
-
-    if (*legal == false) return -1;
-
-    switch (tokens[op].type)
-    {
-    case TK_PLUS: *legal = true;
-              return (val1 + val2);
-              break;
-    case TK_SUB: *legal = true;
-              return (val1 - val2);
-              break;
-    case TK_MUL: *legal = true;
-              return (val1 * val2);
-              break;
-    case TK_DIV: *legal = true;
-              return (val1 / val2);
-              break;
-    default:
-      *legal = false;
+    if (*legal == false) {
       return -1;
-      break;
     }
-
   }
+
+  Log("To find main oprator.");
+  if (*legal == false) return -1;
+  // Find main op.
+  int numOfParentheses = 0;
+  int preOp = -1;
+  op = -1;
+  for (i = p; i <= q; i++) {
+    if ( isCulOp(tokens[i].type) 
+          && (numOfParentheses == 0)) {
+
+      if (op == -1) op = i;
+      else if (comparePriorityOfOp(tokens[i].type, tokens[op].type) <= 0) op = i;
+    }
+    else if (tokens[i].type == TK_LKH) numOfParentheses++;
+    else if (tokens[i].type == TK_RKH) numOfParentheses--;
+  }
+
+  
+  // Main op is found.
+  int val1 = eval(p, op - 1, legal);
+  int val2 = eval(op + 1, q, legal);
+
+  if (*legal == false) return -1;
+
+  switch (tokens[op].type)
+  {
+  case TK_PLUS: *legal = true;
+            return (val1 + val2);
+            break;
+  case TK_SUB: *legal = true;
+            return (val1 - val2);
+            break;
+  case TK_MUL: *legal = true;
+            return (val1 * val2);
+            break;
+  case TK_DIV: *legal = true;
+            return (val1 / val2);
+            break;
+  default:
+    *legal = false;
+    return -1;
+    break;
+  }
+
+
 
   return 0;
 }
