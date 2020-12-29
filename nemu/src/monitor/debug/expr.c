@@ -221,7 +221,7 @@ bool isCulOp(int op) {
 }
 
 uint32_t eval(int p, int q, bool *legal) {
-  Log("Eval begin.\n");
+  Log("Eval begin.");
   int res, i, op;
   if (p > q) {
     *legal = false;
@@ -243,6 +243,7 @@ uint32_t eval(int p, int q, bool *legal) {
     }
   }
   else if (check_parentheses(p, q, legal) == true) {
+    Log("check_parentheses is true.");
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
@@ -250,7 +251,7 @@ uint32_t eval(int p, int q, bool *legal) {
   }
   else {
     if (*legal == false) return -1;
-    Log("To find main oprator.\n");
+    Log("To find main oprator.");
     // Find main op.
     int numOfParentheses = 0;
     int preOp = -1;
