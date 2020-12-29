@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
   char ch[] = "392+2*10";
   unsigned int res = expr(ch, a);
   printf("%d\n", res);
-  printf("%d\n", *a);
+  //printf("%d\n", *a);
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);
