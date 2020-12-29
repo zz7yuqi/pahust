@@ -174,19 +174,20 @@ bool check_parentheses(int p, int q, bool *legal) {
   Log("check_parentheses begin.");
   int i, pre = -1, last = -1;
   int stack[32];
-  int head = -1;
+  int head = 0;
 
   for (i = p; i <= q; i++) {
     if (tokens[i].type == TK_LKH) {
-      stack[++head] = i;
+      stack[head] = i;
+      head++;
     }
     else if (tokens[i].type == TK_RKH) {
-      if (head <= -1) {
+      if (head <= 0) {
         //bad expr
         *legal = false;
         return false;
       }
-      pre = stack[head];    // head >= 0
+      pre = stack[head - 1];    // head >= 0
       last = i;
       head--;
     }
@@ -197,7 +198,7 @@ bool check_parentheses(int p, int q, bool *legal) {
    * when the stack is empty but pre != p
    * return false and legal
    */
-  if (head < 0) {
+  if (head == 0) {
     *legal = true;
 
     if (pre == p && last == q) 
