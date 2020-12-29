@@ -241,7 +241,9 @@ uint32_t eval(int p, int q, bool *legal) {
       return -1;
     }
     else {
+      printf("!\n");
       sscanf(tokens[p].str, "%d", &res);
+      printf("!\n");
       *legal = true;
       return res;
     }
