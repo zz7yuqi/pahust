@@ -221,6 +221,7 @@ bool isCulOp(int op) {
 }
 
 uint32_t eval(int p, int q, bool *legal) {
+  Log("Eval begin.\n");
   int res, i, op;
   if (p > q) {
     *legal = false;
