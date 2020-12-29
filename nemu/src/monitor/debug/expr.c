@@ -297,10 +297,11 @@ uint32_t eval(int p, int q, bool *legal) {
 
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
-    printf("make_token failed!\n");
+    //printf("make_token failed!\n");
     *success = false;
     return 0;
   }
+  for (int i = 0; i < nr_token; i++) printf("%s\n", tokens[i].type);
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
