@@ -254,6 +254,7 @@ uint32_t eval(int p, int q, bool *legal) {
     return eval(p + 1, q - 1, legal);
   }
   else {
+    Log("check_parentheses is false.");
     if (*legal == false) {
       return -1;
     }
