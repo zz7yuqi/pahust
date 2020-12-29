@@ -264,6 +264,7 @@ uint32_t eval(int p, int q, bool *legal) {
       else if (tokens[i].type == TK_LKH) numOfParentheses++;
       else if (tokens[i].type == TK_RKH) numOfParentheses--;
     }
+    printf("main op is %d\n", tokens[op].type);
     
     // Main op is found.
     int val1 = eval(p, op - 1, legal);
@@ -302,7 +303,6 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  for (int i = 0; i < nr_token; i++) printf("%d\n", tokens[i].type);
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
   return eval(0, nr_token - 1, success);
