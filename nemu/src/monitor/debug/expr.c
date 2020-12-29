@@ -249,7 +249,7 @@ uint32_t eval(int p, int q, bool *legal) {
   }
   else {
     if (*legal == false) return -1;
-
+    Log("To find main oprator.\n");
     // Find main op.
     int numOfParentheses = 0;
     int preOp = -1;
@@ -264,7 +264,7 @@ uint32_t eval(int p, int q, bool *legal) {
       else if (tokens[i].type == TK_LKH) numOfParentheses++;
       else if (tokens[i].type == TK_RKH) numOfParentheses--;
     }
-    printf("main op is %d\n", tokens[op].type);
+
     
     // Main op is found.
     int val1 = eval(p, op - 1, legal);
