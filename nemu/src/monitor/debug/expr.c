@@ -280,7 +280,9 @@ uint32_t eval(int p, int q, bool *legal) {
   Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
   // Main op is found.
   uint32_t val1 = eval(p, op - 1, legal);
+  Log("val1 is %d.", val1);
   uint32_t val2 = eval(op + 1, q, legal);
+  Log("val2 is %d.", val2);
 
   if (*legal == false) return -1;
 
