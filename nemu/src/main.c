@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
   int is_batch_mode = init_monitor(argc, argv);
 
   char *a;
-  char ch[] = "392-583*170";
+  char ch[] = "392+583*170";
   printf("%d\n", expr(ch, a));
   printf("%d\n", *a);
 
