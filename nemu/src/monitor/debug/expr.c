@@ -198,6 +198,7 @@ bool check_parentheses(int p, int q, bool *legal) {
    * when the stack is empty but pre != p
    * return false and legal
    */
+  printf("!\n");
   if (head == 0) {
     *legal = true;
 
