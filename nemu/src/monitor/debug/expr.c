@@ -171,7 +171,7 @@ int comparePriorityOfOp(int op1, int op2){
 }
 
 bool check_parentheses(int p, int q, bool *legal) {
-  Log("check_parentheses begin.");
+  //Log("check_parentheses begin.");
   int i, pre = -1, last = -1;
   int stack[32];
   int head = 0;
@@ -223,15 +223,15 @@ bool isCulOp(int op) {
 }
 
 uint32_t eval(int p, int q, bool *legal) {
-  Log("Eval begin.");
+  //Log("Eval begin.");
   uint32_t res, i, op;
   if (p > q) {
-    Log("In eval, p>q.");
+    //Log("In eval, p>q.");
     *legal = false;
     return -1;
   }
   else if (p == q) {
-    Log("In eval, p==q.");
+    //Log("In eval, p==q.");
     /* Single token.
      * For now this token should be a number.
      * Return the value of the number.
@@ -248,20 +248,20 @@ uint32_t eval(int p, int q, bool *legal) {
 
   bool funCheckParenthesesRes = check_parentheses(p, q, legal);
   if (funCheckParenthesesRes == true) {
-    Log("check_parentheses is true.");
+    //Log("check_parentheses is true.");
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
     return eval(p + 1, q - 1, legal);
   }
   else {
-    Log("check_parentheses is false.");
+    //Log("check_parentheses is false.");
     if (*legal == false) {
       return -1;
     }
   }
 
-  Log("To find main oprator.");
+  //Log("To find main oprator.");
   // Find main op.
   int numOfParentheses = 0;
   int preOp = -1;
@@ -277,12 +277,12 @@ uint32_t eval(int p, int q, bool *legal) {
     else if (tokens[i].type == TK_RKH) numOfParentheses--;
   }
 
-  Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
+  //Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
   // Main op is found.
   uint32_t val1 = eval(p, op - 1, legal);
-  Log("val1 is %d.", val1);
+  //Log("val1 is %d.", val1);
   uint32_t val2 = eval(op + 1, q, legal);
-  Log("val2 is %d.", val2);
+  //Log("val2 is %d.", val2);
 
   if (*legal == false) return -1;
 
@@ -293,6 +293,7 @@ uint32_t eval(int p, int q, bool *legal) {
             return (val1 + val2);
             break;
   case TK_SUB:
+            *legal = true;
             return (val1 - val2);
             break;
   case TK_MUL:
@@ -300,6 +301,7 @@ uint32_t eval(int p, int q, bool *legal) {
             return (val1 * val2);
             break;
   case TK_DIV:
+            *legal = true;
             return (val1 / val2);
             break;
   default:
