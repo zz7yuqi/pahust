@@ -211,6 +211,7 @@ bool check_parentheses(int p, int q, bool *legal) {
   //   *legal = false;
   //   return false;
   // }
+  printf("!\n");
   *legal = true;
   return false;
 }
