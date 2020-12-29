@@ -8,7 +8,8 @@ int main(int argc, char *argv[]) {
 
   char *a;
   char ch[] = "392+583*170";
-  printf("%d\n", expr(ch, a));
+  unsigned int res = expr(ch, a);
+  printf("%d\n", res);
   printf("%d\n", *a);
 
   /* Receive commands from user. */
