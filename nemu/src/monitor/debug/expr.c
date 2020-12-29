@@ -247,20 +247,20 @@ uint32_t eval(int p, int q, bool *legal) {
     }
   }
 
-  bool funCheckParenthesesRes = check_parentheses(p, q, legal);
-  if (funCheckParenthesesRes == true) {
-    Log("check_parentheses is true.");
-    /* The expression is surrounded by a matched pair of parentheses.
-     * If that is the case, just throw away the parentheses.
-     */
-    return eval(p + 1, q - 1, legal);
-  }
-  else {
-    Log("check_parentheses is false.");
-    if (*legal == false) {
-      return -1;
-    }
-  }
+  // bool funCheckParenthesesRes = check_parentheses(p, q, legal);
+  // if (funCheckParenthesesRes == true) {
+  //   Log("check_parentheses is true.");
+  //   /* The expression is surrounded by a matched pair of parentheses.
+  //    * If that is the case, just throw away the parentheses.
+  //    */
+  //   return eval(p + 1, q - 1, legal);
+  // }
+  // else {
+  //   Log("check_parentheses is false.");
+  //   if (*legal == false) {
+  //     return -1;
+  //   }
+  // }
 
   Log("To find main oprator.");
   if (*legal == false) return -1;
