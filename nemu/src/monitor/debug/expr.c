@@ -288,16 +288,16 @@ uint32_t eval(int p, int q, bool *legal) {
 
   switch (tokens[op].type)
   {
-  case TK_PLUS: *legal = true;
+  case TK_PLUS: 
             return (val1 + val2);
             break;
-  case TK_SUB: *legal = true;
+  case TK_SUB:
             return (val1 - val2);
             break;
-  case TK_MUL: *legal = true;
+  case TK_MUL:
             return (val1 * val2);
             break;
-  case TK_DIV: *legal = true;
+  case TK_DIV:
             return (val1 / val2);
             break;
   default:
