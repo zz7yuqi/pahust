@@ -345,7 +345,7 @@ uint32_t expr(char *e, bool *success) {
       }
       if(j - i > 1){
         tokens[i].type = (flag == 1? TK_PLUS : TK_SUB) ;
-        erase(i + 1, j - i - 1);
+        eraseTokens(i + 1, j - i - 1);
       }
     }
   } 
