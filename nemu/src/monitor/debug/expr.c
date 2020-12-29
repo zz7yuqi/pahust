@@ -297,6 +297,7 @@ uint32_t eval(int p, int q, bool *legal) {
 
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
+    printf("make_token failed!\n");
     *success = false;
     return 0;
   }
