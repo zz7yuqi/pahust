@@ -315,6 +315,14 @@ uint32_t eval(int p, int q, bool *legal) {
   return 0;
 }
 
+void eraseTokens(int p, int cnt) {
+  int i;
+	for(i = p; i + cnt < nr_token; ++ i){
+		tokens[i] = tokens[i + cnt];
+	}
+	nr_token -= cnt;
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     //printf("make_token failed!\n");
@@ -323,7 +331,27 @@ uint32_t expr(char *e, bool *success) {
   }
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-  //*success = true;
+  // Deal +- --
+  int i, type;
+  for(i = 0; i < nr_token; ++ i){	
+    type = tokens[i].type; 
+    if(type == TK_PLUS || type == TK_SUB)
+    {
+      int j = i;
+      int flag = 1;
+      while(j < nr_token && (type == TK_PLUS || type == TK_SUB)){
+        flag *= (type == TK_PLUS ? 1 : -1);
+        type = tokens[++j].type;
+      }
+      if(j - i > 1){
+        tokens[i].type = (flag == 1? TK_PLUS : TK_SUB) ;
+        erase(i + 1, j - i - 1);
+      }
+    }
+  } 
+
+
+  *success = true;
   return eval(0, nr_token - 1, success);
 
 }
