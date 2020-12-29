@@ -105,9 +105,11 @@ static bool make_token(char *e) {
           case TK_HEX:
 			    case TK_REG:
           case TK_NUM:
-                        tokens[nr_token++].type = rules[i].token_type;
+                        tokens[nr_token].type = rules[i].token_type;
                         strncpy(tokens[nr_token].str, substr_start, substr_len);
 				                tokens[nr_token].str[substr_len] = '\0';
+                        printf("%s\n", tokens[nr_token].str);
+                        nr_token++;
                         break;
           
 
@@ -301,7 +303,6 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  for (int i = 0; i < nr_token; i++) printf("%s\n", tokens[i].type);
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
