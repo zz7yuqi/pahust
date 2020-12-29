@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   int is_batch_mode = init_monitor(argc, argv);
 
   char a = 1;
-  char ch[] = "(392+2)*10";
+  char ch[] = "(392+2*10";
   unsigned int res = expr(ch, &a);
   printf("%d\n", res);
   printf("%d\n", a);
