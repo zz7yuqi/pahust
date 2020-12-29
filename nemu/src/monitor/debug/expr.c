@@ -252,6 +252,7 @@ uint32_t eval(int p, int q, bool *legal) {
     return eval(p + 1, q - 1, legal);
   }
   else {
+    printf("!\n");
     Log("To find main oprator.");
     if (*legal == false) return -1;
     // Find main op.
