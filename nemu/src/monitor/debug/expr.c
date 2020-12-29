@@ -171,6 +171,7 @@ int comparePriorityOfOp(int op1, int op2){
 }
 
 bool check_parentheses(int p, int q, bool *legal) {
+  Log("check_parentheses begin.");
   int i, pre = -1, last = -1;
   int stack[32];
   int head = -1;
@@ -252,7 +253,6 @@ uint32_t eval(int p, int q, bool *legal) {
     return eval(p + 1, q - 1, legal);
   }
   else {
-    printf("!\n");
     Log("To find main oprator.");
     if (*legal == false) return -1;
     // Find main op.
