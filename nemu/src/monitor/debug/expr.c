@@ -29,7 +29,7 @@ static struct rule {
   {"-", '-'},           // minus
   {"\\*", '*'},         // mul
   {"/", '/'},           // div
-  {"-?[1-9][0-9]*", TK_NUM},  // number
+  {"?[1-9][0-9]*", TK_NUM},  // number
   {"==", TK_EQ}         // equal
 };
 
