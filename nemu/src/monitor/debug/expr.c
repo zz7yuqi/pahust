@@ -279,7 +279,7 @@ uint32_t eval(int p, int q, bool *legal) {
     else if (tokens[i].type == TK_RKH) numOfParentheses--;
   }
 
-  Log("Main op is found.It's type is %d.", tokens[op].type);
+  Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
   // Main op is found.
   int val1 = eval(p, op - 1, legal);
   int val2 = eval(op + 1, q, legal);
