@@ -7,7 +7,8 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEX, TK_LKH, TK_RKH, TK_PLUS, TK_SUB, TK_MUL, TK_DIV,
+  TK_REG, TK_AND, TK_OR, TK_DEREF
 
   /* TODO: Add more token types */
 
@@ -23,13 +24,17 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\(", '('},           // (
-  {"\\)", ')'},           // )
-  {"\\+", '+'},         // plus
-  {"-", '-'},           // minus
-  {"\\*", '*'},         // mul
-  {"/", '/'},           // div
+  {"\\(", TK_LKH},           // (
+  {"\\)", TK_RKH},           // )
+  {"\\+", TK_PLUS},         // plus
+  {"-", TK_SUB},           // minus
+  {"\\*", TK_MUL},         // mul
+  {"/", TK_DIV},           // div
+  {"0[Xx][0-9a-fA-F]+", TK_HEX},	// hex (must before the TK_NUM)
   {"[0-9]+", TK_NUM},  // number
+  {"\\$[a-zA-Z]+", TK_REG},			// register
+  {"&&", TK_AND},					// AND
+  {"\\|\\|", TK_OR},					// OR
   {"==", TK_EQ}         // equal
 };
 
@@ -84,40 +89,31 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+        if(substr_len >= 32){
+			    printf("%.*s  The length of the substring is too long.\n", substr_len, substr_start);
+			    return false;
+		    }
+
+		    if(nr_token >= 32) {
+			    printf("The count of tokens(nr_token) is out of the maximum count(32)\n");
+			    return false;
+		    }
 
         switch (rules[i].token_type) {
           case TK_NOTYPE:
                           break;
-          case '(':  
-                    tokens[nr_token++].type = '(';
-                    break;
-          case ')':  
-                    tokens[nr_token++].type = ')';
-                    break;
-          case '+':  
-                    tokens[nr_token++].type = '+';
-                    break;
-          case '-':  
-                    tokens[nr_token++].type = '-';
-                    break;
-          case '*':  
-                    tokens[nr_token++].type = '*';
-                    break;
-          case '/':  
-                    tokens[nr_token++].type = '/';
-                    break;
+          case TK_HEX:
+			    case TK_REG:
           case TK_NUM:
-                        tokens[nr_token++].type = TK_NUM;
-                        if (substr_len > 32) substr_len = 32;
-
-                        for (i = 0; i < substr_len; i++) 
-                          tokens[nr_token].str[i] = substr_start[i];
-                        
+                        tokens[nr_token++].type = rules[i].token_type;
+                        strncpy(tokens[nr_token].str, substr_start, substr_len);
+				                tokens[nr_token].str[substr_len] = '\0';
                         break;
-          case TK_EQ:
-                      tokens[nr_token++].type = TK_EQ;
-                      break;
+          
+
           default: //TODO();
+                    tokens[nr_token++].type = rules[i].token_type;
+                    
                     break;
         }
 
@@ -134,16 +130,55 @@ static bool make_token(char *e) {
   return true;
 }
 
+// return the priority of the op
+int priorityOfOp(int op)
+{
+	int pri;
+	switch(op){
+		case TK_OR:
+			pri = 0;
+			break;
+		case TK_AND:
+			pri = 1;
+			break;
+		case TK_EQ:
+			pri = 2;
+			break;
+		case TK_PLUS:
+		case TK_SUB :
+			pri = 3;
+			break;
+		case TK_MUL:
+		case TK_DIV:
+			pri = 4;
+			break;
+		case TK_DEREF:
+			pri = 5;
+			break;
+		default:
+			pri = 10;
+	}
+	return pri;
+}
+
+int comparePriorityOfOp(int op1, int op2){
+	int p1 = priorityOfOp(op1);
+	int p2 = priorityOfOp(op2);
+	if (p1 < p2) return -1;
+  else if (p1 == p2) return 0;
+  else return 1;
+}
+
 bool check_parentheses(int p, int q, bool *legal) {
   int i, pre = -1, last = -1;
   int stack[32];
   int head = -1;
 
   for (i = p; i <= q; i++) {
-    if (tokens[i].type == '(') {
+    if (tokens[i].type == TK_LKH) {
       stack[++head] = i;
     }
-    else if (tokens[i].type == ')') {
+    else if (tokens[i].type == TK_RKH) {
       if (head <= -1) {
         //bad expr
         *legal = false;
@@ -174,6 +209,13 @@ bool check_parentheses(int p, int q, bool *legal) {
     return false;
   }
 
+  return false;
+}
+
+bool isCulOp(int op) {
+  if (op == TK_PLUS || op == TK_SUB || op == TK_MUL || op == TK_DIV ||
+      op == TK_OR || op == TK_AND || op == TK_EQ || op == TK_DEREF)
+      return true;
   return false;
 }
 
@@ -209,27 +251,20 @@ uint32_t eval(int p, int q, bool *legal) {
 
     // Find main op.
     int numOfParentheses = 0;
-    char preOp = 0;
-    op = p;
+    int preOp = -1;
+    op = -1;
     for (i = p; i <= q; i++) {
-      if ( (tokens[i].type == '+' || tokens[i].type == '-') 
+      if ( isCulOp(tokens[i].type) 
             && (numOfParentheses == 0)) {
 
-        preOp = tokens[i].type;
-        op = i;
+        if (op == -1) op = i;
+        else if (comparePriorityOfOp(tokens[i].type, tokens[op].type) <= 0) op = i;
       }
-      else if ( (tokens[i].type == '*' || tokens[i].type == '/') 
-            && (numOfParentheses == 0)) {
-              
-        if (preOp == 0 || preOp == '*' || preOp == '/') {
-          preOp = tokens[i].type;
-          op = i;
-        }
-      }
-      else if (tokens[i].type == '(') numOfParentheses++;
-      else if (tokens[i].type == ')') numOfParentheses--;
+      else if (tokens[i].type == TK_LKH) numOfParentheses++;
+      else if (tokens[i].type == TK_RKH) numOfParentheses--;
     }
     
+    // Main op is found.
     int val1 = eval(p, op - 1, legal);
     int val2 = eval(op + 1, q, legal);
 
@@ -237,16 +272,16 @@ uint32_t eval(int p, int q, bool *legal) {
 
     switch (tokens[op].type)
     {
-    case '+': *legal = true;
+    case TK_PLUS: *legal = true;
               return (val1 + val2);
               break;
-    case '-': *legal = true;
+    case TK_SUB: *legal = true;
               return (val1 - val2);
               break;
-    case '*': *legal = true;
+    case TK_MUL: *legal = true;
               return (val1 * val2);
               break;
-    case '/': *legal = true;
+    case TK_DIV: *legal = true;
               return (val1 / val2);
               break;
     default:
@@ -270,7 +305,6 @@ uint32_t expr(char *e, bool *success) {
   //TODO();
   return eval(0, nr_token - 1, success);
 
-  return 0;
 }
 
 
