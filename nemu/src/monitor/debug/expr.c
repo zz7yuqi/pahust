@@ -211,7 +211,6 @@ bool check_parentheses(int p, int q, bool *legal) {
   //   *legal = false;
   //   return false;
   // }
-  printf("!\n");
   *legal = true;
   return false;
 }
@@ -247,7 +246,9 @@ uint32_t eval(int p, int q, bool *legal) {
       return res;
     }
   }
-  if (check_parentheses(p, q, legal) == true) {
+
+  bool funCheckParenthesesRes = check_parentheses(p, q, legal);
+  if (funCheckParenthesesRes == true) {
     Log("check_parentheses is true.");
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
