@@ -198,20 +198,20 @@ bool check_parentheses(int p, int q, bool *legal) {
    * when the stack is empty but pre != p
    * return false and legal
    */
-  if (head == 0) {
-    *legal = true;
+  // if (head == 0) {
+  //   *legal = true;
 
-    if (pre == p && last == q) 
-      return true;
-    else 
-      return false;
-  }
-  else {
-    // '(' > '(' illegal
-    *legal = false;
-    return false;
-  }
-
+  //   if (pre == p && last == q) 
+  //     return true;
+  //   else 
+  //     return false;
+  // }
+  // else {
+  //   // '(' > '(' illegal
+  //   *legal = false;
+  //   return false;
+  // }
+  *legal = true;
   return false;
 }
 
