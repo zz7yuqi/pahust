@@ -252,8 +252,9 @@ uint32_t eval(int p, int q, bool *legal) {
     return eval(p + 1, q - 1, legal);
   }
   else {
-    if (*legal == false) return -1;
     Log("To find main oprator.");
+    if (*legal == false) return -1;
+
     // Find main op.
     int numOfParentheses = 0;
     int preOp = -1;
