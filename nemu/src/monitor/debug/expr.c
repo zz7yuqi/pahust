@@ -277,7 +277,7 @@ uint32_t eval(int p, int q, bool *legal) {
     else if (tokens[i].type == TK_RKH) numOfParentheses--;
   }
 
-  //Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
+  Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
   // Main op is found.
   uint32_t val1;
   if (tokens[op].type == TK_DEREF || tokens[op].type == TK_NEG) val1 = 0;
