@@ -44,17 +44,20 @@ static int cmd_info(char *args);
 
 static int cmd_p(char *args);
 
+static int cmd_x(char *args);
+
 static struct {
   char *name;
   char *description;
   int (*handler) (char *);
 } cmd_table [] = {
-  { "help", "Display informations about all supported commands", cmd_help },
-  { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q },
+  { "help", "Display informations about all supported commands.", cmd_help },
+  { "c", "Continue the execution of the program.", cmd_c },
+  { "q", "Exit NEMU.", cmd_q },
   { "si", "Execute N instructions, then stop the program", cmd_si },
-  { "info", "Print register information when \"info r\", print watchpoints when \"info w\"", cmd_info},
-  { "p", "Calculate the value of the expression EXPR", cmd_p},
+  { "info", "Print register information when \"info r\", print watchpoints when \"info w\".", cmd_info},
+  { "p", "Calculate the value of the expression EXPR.", cmd_p},
+  { "x", "Calculate the value of the expression EXPR, and output N consecutive 4 bytes starting from EXPR in hexadecimal form.", cmd_x },
   /* TODO: Add more commands */
 
 };
@@ -138,6 +141,30 @@ static int cmd_p(char *args)
 	return 0;
 }
 
+static int cmd_x(char *args){
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) {
+    printf("wrong args.\n");
+    cmd_help("x");
+    return 0;
+  }
+	int n = 0, i;
+	sscanf(arg, "%d", &n);
+
+  char *exprInCmd = arg + strlen(arg) + 1;
+
+	bool success = true;
+	uint32_t res = expr(exprInCmd, &success);
+	if(!success) {
+    printf("wrong expr.\n");
+    return 0;
+  }
+	for(i = 0; i < n; i++){
+		printf("0x%08x: 0x%08x\n ", res, vaddr_read(res, 4));
+		res += 4;
+	}
+	return 0;
+}
 
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
