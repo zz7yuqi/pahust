@@ -290,7 +290,6 @@ uint32_t eval(int p, int q, bool *legal) {
   //Log("To find main oprator.");
   // Find main op.
   int numOfParentheses = 0;
-  int preOp = -1;
   op = -1;
   for (i = p; i <= q; i++) {
     if ( isCulOp(tokens[i].type) 
