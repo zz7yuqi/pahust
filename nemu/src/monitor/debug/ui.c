@@ -160,7 +160,7 @@ static int cmd_x(char *args){
     return 0;
   }
 	for(i = 0; i < n; i++){
-		printf("0x%08x: 0x%08x\n ", res, vaddr_read(res, 4));
+		printf("0x%08x: 0x%08x\n ", res, instr_fetch(&res, 4));
 		res += 4;
 	}
 	return 0;
