@@ -8,7 +8,7 @@
 
 enum {
   TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEX, TK_LKH, TK_RKH, TK_PLUS, TK_SUB, TK_MUL, TK_DIV,
-  TK_REG, TK_AND, TK_OR, TK_DEREF
+  TK_REG, TK_AND, TK_OR, TK_DEREF, TK_NEG
 
   /* TODO: Add more token types */
 
@@ -27,12 +27,12 @@ static struct rule {
   {"\\(", TK_LKH},           // (
   {"\\)", TK_RKH},           // )
   {"\\+", TK_PLUS},         // plus
-  {"-", TK_SUB},           // minus
-  {"\\*", TK_MUL},         // mul
+  {"-", TK_SUB},           // minus or negative
+  {"\\*", TK_MUL},         // mul or deref
   {"/", TK_DIV},           // div
   {"0[Xx][0-9a-fA-F]+", TK_HEX},	// hex (must before the TK_NUM)
   {"[0-9]+", TK_NUM},  // number
-  {"\\$[a-zA-Z]+", TK_REG},			// register
+  {"\\$[a-zA-Z0-9]+", TK_REG},			// register
   {"&&", TK_AND},					// AND
   {"\\|\\|", TK_OR},					// OR
   {"==", TK_EQ}         // equal
@@ -279,7 +279,9 @@ uint32_t eval(int p, int q, bool *legal) {
 
   //Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
   // Main op is found.
-  uint32_t val1 = eval(p, op - 1, legal);
+  uint32_t val1;
+  if (tokens[op].type == TK_DEREF || tokens[op].type == TK_NEG) val1 = 0;
+  else val1 = eval(p, op - 1, legal);
   //Log("val1 is %d.", val1);
   uint32_t val2 = eval(op + 1, q, legal);
   //Log("val2 is %d.", val2);
@@ -292,6 +294,7 @@ uint32_t eval(int p, int q, bool *legal) {
             *legal = true;
             return (val1 + val2);
             break;
+  case TK_NEG:
   case TK_SUB:
             *legal = true;
             return (val1 - val2);
@@ -301,9 +304,26 @@ uint32_t eval(int p, int q, bool *legal) {
             return (val1 * val2);
             break;
   case TK_DIV:
+            if (val2 == 0) {
+              *legal = false;
+              Log("Expr div failed.");
+              return -1;
+            }
             *legal = true;
             return (val1 / val2);
             break;
+  case TK_AND:
+			return (val1 && val2);
+			break;
+	case TK_OR:
+			return (val1 || val2);
+			break;
+	case TK_EQ:
+			return (val1 == val2);
+			break;
+	case TK_DEREF:
+			return vaddr_read(val2, 4);
+			break;	
   default:
     *legal = false;
     return -1;
@@ -331,24 +351,17 @@ uint32_t expr(char *e, bool *success) {
   }
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-  // Deal +- --
-  int i, type;
-  for(i = 0; i < nr_token; ++ i){	
-    type = tokens[i].type; 
-    if(type == TK_PLUS || type == TK_SUB)
-    {
-      int j = i;
-      int flag = 1;
-      while(j < nr_token && (type == TK_PLUS || type == TK_SUB)){
-        flag *= (type == TK_PLUS ? 1 : -1);
-        type = tokens[++j].type;
-      }
-      if(j - i > 1){
-        tokens[i].type = (flag == 1? TK_PLUS : TK_SUB) ;
-        eraseTokens(i + 1, j - i - 1);
-      }
+  // Deal with negative
+  // Deal with type TK_DeREF
+  int i;
+  for(i = 0; i < nr_token; ++ i) {
+    if(tokens[i].type == TK_MUL && (i == 0 || isCulOp(tokens[i - 1].type))) {
+        tokens[i].type = TK_DEREF;
     }
-  } 
+    if(tokens[i].type == TK_SUB && (i == 0 || isCulOp(tokens[i - 1].type))) {
+        tokens[i].type = TK_NEG;
+    }
+  }
 
 
   *success = true;
