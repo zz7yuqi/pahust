@@ -42,6 +42,8 @@ static int cmd_si(char *args);
 
 static int cmd_info(char *args);
 
+static int cmd_p(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -51,8 +53,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Execute N instructions, then stop the program", cmd_si },
-  { "info", "Print register information when \"info r\", print watch point when \"info w\"", cmd_info},
-
+  { "info", "Print register information when \"info r\", print watchpoints when \"info w\"", cmd_info},
+  { "p", "Calculate the value of the expression EXPR", cmd_p},
   /* TODO: Add more commands */
 
 };
@@ -113,15 +115,27 @@ static int cmd_info(char * args){
     isa_reg_display();
   }
   else if (strcmp(args, "w") == 0){
-
+    printWP();
   }
   else {
     printf("error args.\n");
   }
-  
-  
 
   return 0;
+}
+
+static int cmd_p(char *args)
+{
+	if(args == NULL) return 0;
+	bool success = true;
+	uint32_t value = expr(args, &success);
+	if(success){
+		printf("0x%08x\n", value);
+	}
+  else {
+    printf("wrong EXPR.\n");
+  }
+	return 0;
 }
 
 

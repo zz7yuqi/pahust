@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
   int is_batch_mode = init_monitor(argc, argv);
 
   //test_expr();
-  char ch[] = "1+0x1+$0";
-  char a = 1;
-  int res = expr(ch, &a);
-  printf("%d\n%d\n", res, a);
+//   char ch[] = "1+0x1+$0";
+//   char a = 1;
+//   int res = expr(ch, &a);
+//   printf("%d\n%d\n", res, a);
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);
