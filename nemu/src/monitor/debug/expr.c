@@ -153,6 +153,7 @@ int priorityOfOp(int op)
 		case TK_DIV:
 			pri = 4;
 			break;
+    case TK_NEG:
 		case TK_DEREF:
 			pri = 5;
 			break;
