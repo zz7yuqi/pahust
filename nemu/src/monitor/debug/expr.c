@@ -352,7 +352,7 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
   // Deal with negative
-  // Deal with type TK_DeREF
+  Log("Deal with type TK_DeREF and tpye TK_NEG.");
   int i;
   for(i = 0; i < nr_token; ++ i) {
     if(tokens[i].type == TK_MUL && (i == 0 || isCulOp(tokens[i - 1].type))) {
