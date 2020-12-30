@@ -237,14 +237,39 @@ uint32_t eval(int p, int q, bool *legal) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-    if (tokens[p].type != TK_NUM) {
-      *legal = false;
-      return -1;
-    }
-    else {
+
+    // if (tokens[p].type != TK_NUM) {
+    //   *legal = false;
+    //   return -1;
+    // }
+    // else {
+    //   sscanf(tokens[p].str, "%d", &res);
+    //   return res;
+    // }
+    switch (tokens[p].type)
+    {
+    case TK_NUM:
       sscanf(tokens[p].str, "%d", &res);
       return res;
+      break;
+    case TK_HEX:
+      sscanf(tokens[p].str, "%x", &res);
+      return res;
+      break;
+    case TK_REG:
+      res = isa_reg_str2val(tokens[p].str + 1, legal);
+      if (*legal) return res;
+      else printf("Unknown register: %s\n", tokens[p].str);
+      return 0;
+      break;
+    default:
+      printf("Unknown type: %d.\n", tokens[p].type);
+      *legal = false;
+      return -1;
+      break;
     }
+
+
   }
 
   bool funCheckParenthesesRes = check_parentheses(p, q, legal);
@@ -278,7 +303,7 @@ uint32_t eval(int p, int q, bool *legal) {
     else if (tokens[i].type == TK_RKH) numOfParentheses--;
   }
 
-  Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
+  //Log("Main op is found.op is %d.It's type is %d.", op, tokens[op].type);
   // Main op is found.
   uint32_t val1;
   if (tokens[op].type == TK_DEREF || tokens[op].type == TK_NEG) val1 = 0;
@@ -353,7 +378,7 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
   // Deal with negative
-  Log("Deal with type TK_DeREF and tpye TK_NEG.");
+  //Log("Deal with type TK_DeREF and tpye TK_NEG.");
   int i;
   for(i = 0; i < nr_token; ++ i) {
     if(tokens[i].type == TK_MUL && (i == 0 || isCulOp(tokens[i - 1].type))) {
