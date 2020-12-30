@@ -217,7 +217,7 @@ bool check_parentheses(int p, int q, bool *legal) {
 
 bool isCulOp(int op) {
   if (op == TK_PLUS || op == TK_SUB || op == TK_MUL || op == TK_DIV ||
-      op == TK_OR || op == TK_AND || op == TK_EQ || op == TK_DEREF)
+      op == TK_OR || op == TK_AND || op == TK_EQ || op == TK_DEREF || op == TK_NEG)
       return true;
   return false;
 }
