@@ -56,7 +56,7 @@ void printWP() {
 	printf("No  EXPR                Value\n");
 	WP *p = head;
 	while(p != NULL) {
-		printf("%-5d%-20s%u(%#x)\n", p -> NO, p -> str, p->value, p->value);
+		printf("%-5d%-20s%#x\n", p->NO, p->expr, p->value);
 		p = p -> next;
 	}
 }

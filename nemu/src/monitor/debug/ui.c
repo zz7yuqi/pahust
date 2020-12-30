@@ -46,6 +46,10 @@ static int cmd_p(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_w(char *args);
+
+static int cmd_d(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -58,6 +62,8 @@ static struct {
   { "info", "Print register information when \"info r\", print watchpoints when \"info w\".", cmd_info},
   { "p", "Calculate the value of the expression EXPR.", cmd_p},
   { "x", "Calculate the value of the expression EXPR, and output N consecutive 4 bytes starting from EXPR in hexadecimal form.", cmd_x },
+  { "w", "Set watchpoint for the EXPR.", cmd_w },
+  { "d", "Delete watchpoint whose id is N", cmd_d}
   /* TODO: Add more commands */
 
 };
@@ -165,6 +171,40 @@ static int cmd_x(char *args){
 	}
 	return 0;
 }
+
+static int cmd_w(char *args)
+{
+  if (args == NULL) {
+    printf("wrong args.\n");
+    cmd_help("w");
+    return 0;
+  }
+	char *exprOfCmd = args + strlen(args) + 1;
+	WP* wp = new_wp();
+	memset(wp->expr, 0, sizeof(wp->expr));
+	strcpy(wp->expr, exprOfCmd);
+	bool success = true;
+	wp->value = expr(exprOfCmd, &success);
+	if(!success){
+		printf("wrong expr.\n");
+		free_wp(wp);
+	}
+	wp->hit = 0;
+	return 0;
+}
+
+static int cmd_d(char *args)
+{
+  printf("%s\n", args);
+	// char *arg = strtok(NULL, " ");
+	// if(arg == NULL) return 0;
+	// int n = 0;
+	// sscanf(arg, "%d", &n);
+	// if(!del_wp(n)) printf("Delete failed: %d is not exist!\n", n);
+	// else printf("Delete success!\n");
+	return 0;
+}
+
 
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
