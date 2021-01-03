@@ -195,13 +195,10 @@ static int cmd_w(char *args)
 
 static int cmd_d(char *args)
 {
-  printf("%s\n", args);
-	// char *arg = strtok(NULL, " ");
-	// if(arg == NULL) return 0;
-	// int n = 0;
-	// sscanf(arg, "%d", &n);
-	// if(!del_wp(n)) printf("Delete failed: %d is not exist!\n", n);
-	// else printf("Delete success!\n");
+	int n = 0;
+	sscanf(args, "%d", &n);
+	if(!delWP(n)) printf("delete failed.\n");
+	else printf("Success!\n");
 	return 0;
 }
 

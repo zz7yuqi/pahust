@@ -21,5 +21,21 @@ void isa_reg_display() {
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {
   //when s == "0", return $0.
+  if (strcmp(s, "0") == 0) {
+    *success = true;
+    return reg_l(0);
+  } 
+
+  int index;
+  bool find = false;
+  for (index = 1; index < 32; index++) {
+    if (strcmp(s, regsl[index]) == 0) {
+      find = true;
+      *success = true;
+      return reg_l(index);
+    }
+  }
+
+  if (!find) *success = false;
   return 0;
 }

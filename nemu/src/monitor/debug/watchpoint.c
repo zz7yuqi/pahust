@@ -57,7 +57,40 @@ void printWP() {
 	WP *p = head;
 	while(p != NULL) {
 		printf("%-5d%-20s%#x\n", p->NO, p->expr, p->value);
-		p = p -> next;
+		p = p->next;
 	}
 }
 
+bool delWP(int n)
+{
+  WP *temp = head;
+  while(temp != NULL) {
+    if (temp->NO == n) {
+      free_wp(temp);
+      break;
+    }
+    temp = temp->next;
+  }
+	
+	if (temp == NULL) return false;
+  return true;
+}
+
+bool checkWP() {
+  bool change = false;
+  WP *temp = head;
+  while(temp != NULL) {
+    bool success = true;
+    uint32_t res = expr(temp->expr, &success);
+    Assert(success, "watchpoint expr must be success.\n");	
+    if (res != temp->value) {
+      printf("watchpoint%d(%s) changes from %u to %u.\n", temp->next, temp->expr, temp->value, res);
+      change = true;
+      temp->value = res;
+      temp->hit++;
+    }
+    temp = temp->next;
+  }
+  
+	return change;
+}
