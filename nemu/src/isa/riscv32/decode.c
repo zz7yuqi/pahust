@@ -22,11 +22,80 @@ static inline make_DopHelper(r) {
   print_Dop(op->str, OP_STR_SIZE, "%s", reg_name(op->reg, 4));
 }
 
+/* type R:
+ * dest: rd
+ * src1: rs1
+ * src2: rs2
+ */
+make_DHelper(R) {
+  decode_op_r(id_src, decinfo.isa.instr.rs1, true);
+  decode_op_r(id_src2, decinfo.isa.instr.rs2, true);
+  decode_op_r(id_dest, decinfo.isa.instr.rd, false);
+}
+/* type I:
+ * dest: rd
+ * src1: rs1
+ * src2: imm[11:0]
+ */
+
+
+make_DHelper(I) {
+  uint32_t tempImm = decinfo.isa.instr.simm11_0;
+  decode_op_r(id_src, decinfo.isa.instr.rs1, true);
+  decode_op_i(id_src2, (int32_t)(tempImm << 20) >> 20, true);
+  decode_op_r(id_dest, decinfo.isa.instr.rd, false);
+
+  print_Dop(id_src->str, OP_STR_SIZE, "0x%x",  decinfo.isa.instr.rs1);
+  print_Dop(id_src2->str, OP_STR_SIZE, "0x%x", decinfo.isa.instr.simm11_0);
+}
+
+/* type U:
+ * src: imm[31:12] << 12
+ * dest: rd(instr[11:7])
+ */
 make_DHelper(U) {
   decode_op_i(id_src, decinfo.isa.instr.imm31_12 << 12, true);
   decode_op_r(id_dest, decinfo.isa.instr.rd, false);
 
   print_Dop(id_src->str, OP_STR_SIZE, "0x%x", decinfo.isa.instr.imm31_12);
+}
+
+/* type B:
+ * src: rs1
+ * src2: rs2
+ * if $rs1 ==(!=) $rs2 , BRANCH 
+ */
+make_DHelper(B) {
+  decode_op_r(id_src, decinfo.isa.instr.rs1, true);
+  decode_op_r(id_src2, decinfo.isa.instr.rs2, true);
+
+  uint32_t tempImm = (decinfo.isa.instr.simm12 << 12) 
+                    | (decinfo.isa.instr.imm11 << 11)
+                    | (decinfo.isa.instr.imm10_5 << 5)
+                    | (decinfo.isa.instr.imm4_1 << 1);
+  int32_t tempImmSExt = (int32_t)(tempImm << 19) >> 19;
+  rtl_add(&decinfo.jmp_pc, &tempImmSExt, &cpu.pc);
+  
+  print_Dop(id_dest->str, OP_STR_SIZE, "0x%x", t0);
+}
+
+/* type J:
+ * dest-addr: imm+pc
+ */
+make_DHelper(J) {
+  uint32_t tempImm =  (decinfo.isa.instr.simm20 << 20) 
+        | (decinfo.isa.instr.imm19_12 << 12) 
+        | (decinfo.isa.instr.imm11_ << 11) 
+        | (decinfo.isa.instr.imm10_1 << 1);   
+  int32_t tempSExtImm = (int32_t)(tempImm << 11) >> 11;
+
+  decode_op_i(id_src , tempSExtImm, true);
+  rtl_add(&decinfo.jmp_pc, &tempSExtImm, &cpu.pc);
+
+  decode_op_r(id_dest, decinfo.isa.instr.rd, false);
+  
+  
+  print_Dop(id_src->str, OP_STR_SIZE, "0x%x", t0);
 }
 
 make_DHelper(ld) {
@@ -40,6 +109,11 @@ make_DHelper(ld) {
   decode_op_r(id_dest, decinfo.isa.instr.rd, false);
 }
 
+/* type S:
+ * src: rs1+imm
+ * dest: rs2
+ * mov rs2->val to *(rs1+imm) 
+ */
 make_DHelper(st) {
   decode_op_r(id_src, decinfo.isa.instr.rs1, true);
   int32_t simm = (decinfo.isa.instr.simm11_5 << 5) | decinfo.isa.instr.imm4_0;
@@ -51,3 +125,4 @@ make_DHelper(st) {
 
   decode_op_r(id_dest, decinfo.isa.instr.rs2, true);
 }
+
