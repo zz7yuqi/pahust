@@ -1,7 +1,7 @@
 #include "cpu/exec.h"
 #include "all-instr.h"
 
-static OpcodeEntry load_table [8] = {
+static OpcodeEntry load_table[8] = {
   EMPTY, EMPTY, EXW(ld, 4), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY
 };
 
@@ -10,7 +10,7 @@ static make_EHelper(load) {
   idex(pc, &load_table[decinfo.isa.instr.funct3]);
 }
 
-static OpcodeEntry store_table [8] = {
+static OpcodeEntry store_table[8] = {
   EMPTY, EMPTY, EXW(st, 4), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY
 };
 
@@ -19,13 +19,30 @@ static make_EHelper(store) {
   idex(pc, &store_table[decinfo.isa.instr.funct3]);
 }
 
+static OpcodeEntry regImm_table[8] = {
+  EX(addi), EX(slli), EX(slti), EX(sltiu), EX(xori), EX(srliORsrai), EX(ori), EX(andi)
+};
+
+static make_EHelper(regImm) {
+  decinfo.width = regImm_table[decinfo.isa.instr.funct3].width;
+  idex(pc, &regImm_table[decinfo.isa.instr.funct3]);
+}
+
+static OpcodeEntry regReg_table[8] = {
+  EX(addORsub), EX(sll), EX(slt), EX(sltu), EX(xor), EX(srlORsra), EX(or), EX(and)
+};
+
+static make_EHelper(regReg) {
+  decinfo.width = regReg_table[decinfo.isa.instr.funct3].width;
+  idex(pc, &regReg_table[decinfo.isa.instr.funct3]);
+}
 
 
 static OpcodeEntry opcode_table [32] = {
-  /* b00 */ IDEX(ld, load), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-  /* b01 */ IDEX(st, store), EMPTY, EMPTY, EMPTY, EMPTY, IDEX(U, lui), EMPTY, EMPTY,
+  /* b00 */ IDEX(ld, load), EMPTY, EMPTY, EMPTY, IDEX(I, regImm), IDEX(U, auipc), EMPTY, EMPTY,
+  /* b01 */ IDEX(st, store), EMPTY, EMPTY, EMPTY, IDEX(R, regReg), IDEX(U, lui), EMPTY, EMPTY,
   /* b10 */ EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-  /* b11 */ EMPTY, EMPTY, EX(nemu_trap), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+  /* b11 */ IDEX(B, conBranch), IDEX(I, jalr), EX(nemu_trap), IDEX(J, jal), EMPTY, EMPTY, EMPTY, EMPTY,
 };
 
 void isa_exec(vaddr_t *pc) {
