@@ -31,6 +31,7 @@ make_EHelper(jal);
 
 
 make_EHelper(ld);
+make_EHelper(lh_lb);
 make_EHelper(st);
 
 make_EHelper(inv);
