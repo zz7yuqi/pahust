@@ -43,7 +43,6 @@ make_EHelper(sys){
         //ecall
         case 0b0:
             if((instr.val & ~(0x7f))==0){
-                printf("0x%x\n", cpu.csr[STVEC]);
                 raise_intr(reg_l(17), decinfo.seq_pc-4);
             }
             else if(instr.val == 0x10200073){
