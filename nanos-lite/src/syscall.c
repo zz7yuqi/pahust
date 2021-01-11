@@ -45,10 +45,10 @@ int do_write(int fd, const void*buf, size_t count){
 //     return res;
 // }
 
-// int do_brk(int addr){
-//     programBrk = addr;
-//     return 0;
-// }
+int do_brk(int addr){
+    programBrk = addr;
+    return 0;
+}
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -81,9 +81,9 @@ _Context* do_syscall(_Context *c) {
     // case SYS_close:
     //     c->GPRx = do_close(a[1]);
     //     break;
-    // case SYS_brk:
-    //     c->GPRx = do_brk(a[1]);
-    //     break;
+    case SYS_brk:
+        c->GPRx = do_brk(a[1]);
+        break;
     // case SYS_execve:
     //     printf("%s\n", a[1]);
     //     naive_uload(NULL, (const char*)a[1]);
