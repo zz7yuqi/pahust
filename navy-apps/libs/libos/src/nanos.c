@@ -6,6 +6,7 @@
 #include <time.h>
 #include "syscall.h"
 
+extern uint32_t end;
 // helper macros
 #define _concat(x, y) x ## y
 #define concat(x, y) _concat(x, y)
@@ -54,37 +55,51 @@ void _exit(int status) {
 }
 
 int _open(const char *path, int flags, mode_t mode) {
-  _exit(SYS_open);
-  return 0;
+  int res = _syscall_(SYS_open, (intptr_t)path, flags, mode);
+  return res;
 }
 
 int _write(int fd, void *buf, size_t count) {
-  _exit(SYS_write);
-  return 0;
+  int res = _syscall_(SYS_write, fd, (intptr_t)buf, count);
+  return res;
 }
 
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+  static int programBrk = 0;
+    if(programBrk == 0){
+        programBrk = &end;
+    }
+    int ret = programBrk;
+    /*
+    char tmp[100];
+    sprintf(tmp, "brk:%d, incre:%d\n", programBrk, increment);
+    _write(1, tmp, 100);
+    */
+    if(!_syscall_(SYS_brk, programBrk + increment, 0, 0)){
+        programBrk += increment;
+        return (void *)ret;
+    }
+    return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {
-  _exit(SYS_read);
-  return 0;
+  int res = _syscall_(SYS_read, fd, (intptr_t)buf, count);
+  return res;
 }
 
 int _close(int fd) {
-  _exit(SYS_close);
-  return 0;
+  int res = _syscall_(SYS_close, fd, 0, 0);
+  return res;
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
-  _exit(SYS_lseek);
-  return 0;
+  off_t res = _syscall_(SYS_lseek, fd, (intptr_t)offset, whence);
+  return res;
 }
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
-  _exit(SYS_execve);
-  return 0;
+  int res = _syscall_(SYS_execve, fname, (intptr_t)argv, (intptr_t)envp);
+  return res;
 }
 
 // The code below is not used by Nanos-lite.
