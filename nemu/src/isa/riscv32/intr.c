@@ -12,7 +12,7 @@ void raise_intr(uint32_t NO, vaddr_t epc) {
   //decinfo.jmp_pc = decinfo.isa.stvec;
   //printf("stvec%x\n", cpu.csr[STVEC]);
   decinfo.jmp_pc = cpu.csr[STVEC];
-  decinfo_set_jmp(true);
+  interpret_rtl_j(decinfo.jmp_pc);
 }
 
 bool isa_query_intr(void) {
