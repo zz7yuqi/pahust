@@ -56,7 +56,7 @@ make_EHelper(sys){
         // csrrw
         case 0b001:
             s0 = readcsr(instr.csr);
-            printf("s0:%x\n",id_src->val);
+            printf("s0:%x\n",id_src->reg);
             writecsr(instr.csr, id_src->val);
             rtl_sr(id_dest->reg, &s0, 4);
             break;
