@@ -7,7 +7,7 @@ make_EHelper(jal) { /* interpret_rtl_jal(vaddr_t *pc) */
    //rtl_add(&decinfo.jmp_pc, &id_src->val, &cpu.pc);
    interpret_rtl_j(decinfo.jmp_pc); 
    print_asm_template2(jal);
-   if (cpu.pc == 0x8010099c) printf("!!!!\n");
+   printf("0x%x\n", cpu.pc);
     // s0 = decinfo.seq_pc;
     // s1 = 4;
     // rtl_sr(id_dest->reg, &s0, 4);
