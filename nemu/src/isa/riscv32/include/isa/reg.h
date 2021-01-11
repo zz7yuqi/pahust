@@ -5,10 +5,16 @@
 
 #define PC_START (0x80000000u + IMAGE_START)
 
+enum {
+  STVEC = 0, SEPC, SSTATUS, SCAUSE
+};
+
 typedef struct {
   struct {
     rtlreg_t _32;
   } gpr[32];
+
+  rtlreg_t csr[4];
 
   vaddr_t pc;
 

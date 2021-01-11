@@ -34,5 +34,8 @@ make_EHelper(ld);
 make_EHelper(lh_lb);
 make_EHelper(st);
 
+/* system */
 make_EHelper(inv);
 make_EHelper(nemu_trap);
+make_EHelper(sys);
+
