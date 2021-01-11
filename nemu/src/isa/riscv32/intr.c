@@ -10,7 +10,7 @@ void raise_intr(uint32_t NO, vaddr_t epc) {
   //printf("epc%x\n", epc);
   cpu.csr[SCAUSE] = NO;
   //decinfo.jmp_pc = decinfo.isa.stvec;
-  //printf("stvec%x\n", cpu.csr[STVEC]);
+  printf("stvec%x\n", cpu.csr[STVEC]);
   decinfo.jmp_pc = cpu.csr[STVEC];
   decinfo_set_jmp(true);
 }
