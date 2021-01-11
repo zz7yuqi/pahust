@@ -15,7 +15,7 @@ void isa_exec(vaddr_t *pc);
 
 vaddr_t exec_once(void) {
   if (cpu.pc == 0x80100360) printf("trap!\n");
-  //if (cpu.pc == 0x80100360) printf("trap!\n");
+  if (cpu.pc == 0x80100ac0) printf("_yield!\n");
   decinfo.seq_pc = cpu.pc;
   isa_exec(&decinfo.seq_pc);
   update_pc();
