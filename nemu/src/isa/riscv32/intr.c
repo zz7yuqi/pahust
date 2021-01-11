@@ -6,10 +6,8 @@ void raise_intr(uint32_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * That is, use ``NO'' to index the IDT.
    */
-  //decinfo.isa.sepc = epc;
   cpu.csr[SEPC] = epc;
-  printf("epc%x\n", epc);
-  //decinfo.isa.scause = NO;
+  //printf("epc%x\n", epc);
   cpu.csr[SCAUSE] = NO;
   //decinfo.jmp_pc = decinfo.isa.stvec;
   //printf("stvec%x\n", cpu.csr[STVEC]);
