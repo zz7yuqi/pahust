@@ -18,6 +18,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
   Elf_Ehdr Ehdr;
   int fd = fs_open(filename, 0, 0);
+  printf("%s\n", filename);
   fs_lseek(fd, 0, SEEK_SET);
   fs_read(fd, &Ehdr, sizeof(Ehdr));
   //ramdisk_read(&Ehdr, 0, sizeof(Ehdr));
