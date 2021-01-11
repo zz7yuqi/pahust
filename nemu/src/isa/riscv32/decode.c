@@ -130,3 +130,10 @@ make_DHelper(SYS) {
   decode_op_r(id_dest, decinfo.isa.instr.rd, false);
   decode_op_r(id_src, decinfo.isa.instr.rs1, true);
 }
+
+make_DHelper(JAL) {
+  Instr instr = decinfo.isa.instr;
+  s0 = (instr.simm20<<20) + (instr.imm19_12<<12) + (instr.imm11_<<11) + (instr.imm10_1<<1);
+  decode_op_i(id_src, s0, true);
+  decode_op_r(id_dest, decinfo.isa.instr.rd, false);
+}

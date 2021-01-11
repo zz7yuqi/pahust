@@ -2,6 +2,12 @@
 
 /* unconditional jumps (type J) */
 make_EHelper(jal) { /* interpret_rtl_jal(vaddr_t *pc) */
+//    t0 = cpu.pc + 4;
+//    rtl_sr(id_dest->reg, &t0, 4);
+//    //rtl_add(&decinfo.jmp_pc, &id_src->val, &cpu.pc);
+//    interpret_rtl_j(decinfo.jmp_pc); 
+//    print_asm_template2(jal);
+
     s0 = decinfo.seq_pc;
     s1 = 4;
     rtl_sr(id_dest->reg, &s0, 4);

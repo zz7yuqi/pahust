@@ -60,5 +60,6 @@ make_DHelper(R);
 make_DHelper(J);
 make_DHelper(B);
 make_DHelper(SYS);
+make_DHelper(JAL);
 
 #endif
