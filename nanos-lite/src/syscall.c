@@ -8,6 +8,7 @@ extern void naive_uload(PCB *pcb, const char *filename);
 static int programBrk;
 
 int do_open(const char*path, int flags, int mode){
+    printf("%s\n", path);
     int res = fs_open(path, flags, mode);
     return res;
 }
