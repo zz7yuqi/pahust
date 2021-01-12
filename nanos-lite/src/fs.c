@@ -2,6 +2,12 @@
 
 extern size_t ramdisk_read(void*, size_t, size_t);
 extern size_t ramdisk_write(const void*, size_t, size_t);
+extern size_t serial_write(const void*, size_t, size_t);
+extern size_t events_read(void*, size_t, size_t);
+extern size_t dispinfo_read(void*, size_t, size_t);
+extern size_t fb_write(const void*, size_t, size_t);
+extern size_t fbsync_write(const void*, size_t, size_t);
+
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
@@ -37,8 +43,13 @@ size_t stdout_stderr_write(const void *buf, size_t offset, size_t len) {
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
   {"stdin", 0, 0, 0, invalid_read, invalid_write},
-  {"stdout", 0, 0, 0, invalid_read, stdout_stderr_write},
-  {"stderr", 0, 0, 0, invalid_read, stdout_stderr_write},
+  {"stdout", 0, 0, 0, invalid_read, serial_write},
+  {"stderr", 0, 0, 0, invalid_read, serial_write},
+  {"/dev/events", 0xffffff, 0, 0, events_read, invalid_write},
+  {"/dev/tty", 0, 0, 0, invalid_read, serial_write},
+  {"/dev/fb", 0, 0, 0, invalid_read, fb_write},
+  {"/dev/fbsync", 0xffff, 0, 0, invalid_read, fbsync_write},
+  {"/proc/dispinfo", 128, 0, 0, dispinfo_read, invalid_write},
 #include "files.h"
 };
 
@@ -82,7 +93,6 @@ size_t fs_write(int fd, const void *buf, size_t len){
         ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
     }
     else{
-        printf("%d", fd);
         file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
     }
     file_table[fd].open_offset += len;
@@ -111,6 +121,6 @@ int fs_close(int fd){
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  // int fb = fs_open("/dev/fb", 0, 0);
-  // file_table[fb].size = screen_width()*screen_height()*4;
+  int fb = fs_open("/dev/fb", 0, 0);
+  file_table[fb].size = screen_width()*screen_height()*4;
 }
