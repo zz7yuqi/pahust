@@ -21,7 +21,10 @@ void init_wp_pool() {
 /* TODO: Implement the functionality of watchpoint */
 /* get a free watchpoint from list free_ */
 WP* new_wp() {
-  if (free_ == NULL) return NULL;
+  if(!free_){
+    printf("Wp_pool is empty!\n");
+    assert(0);
+  }
 
   WP *newWP = free_;
   free_ = free_->next;

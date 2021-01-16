@@ -8,9 +8,6 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
-extern WP * wp_pool;
-extern WP *head, *free_;
-
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -181,12 +178,10 @@ static int cmd_w(char *args)
     cmd_help("w");
     return 0;
   }
-	char *exprOfCmd = args;// + strlen(args) + 1;
+	char *exprOfCmd = args;
   
 	WP* wp = new_wp();
-  printf("%x\n", wp);
-  printf("%d\n", wp->NO);
-	memset(wp->expr, 0, sizeof(wp->expr));
+
 	strcpy(wp->expr, exprOfCmd);
 	bool success = true;
   
