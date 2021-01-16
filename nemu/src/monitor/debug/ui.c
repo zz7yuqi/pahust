@@ -8,7 +8,6 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
-
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -174,23 +173,17 @@ static int cmd_x(char *args){
 
 static int cmd_w(char *args)
 {
-  if (args == NULL) {
-    printf("wrong args.\n");
-    cmd_help("w");
+  bool success;
+  int res;
+  res = expr(args, &success);
+  if(!success){
+    printf("Wrong experssion!\n");
     return 0;
   }
-	char *exprOfCmd = args + strlen(args) + 1;
-	WP* wp = new_wp();
-	memset(wp->expr, 0, sizeof(wp->expr));
-	strcpy(wp->expr, exprOfCmd);
-	bool success = true;
-	wp->value = expr(exprOfCmd, &success);
-	if(!success){
-		printf("wrong expr.\n");
-		free_wp(wp);
-	}
-	wp->hit = 0;
-	return 0;
+  WP *wp = new_wp(args, res);
+  // wp->value = res;
+  // strcpy(wp->expr, args);
+  return 0;
 }
 
 static int cmd_d(char *args)
