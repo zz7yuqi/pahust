@@ -182,7 +182,7 @@ static int cmd_w(char *args)
 	char *exprOfCmd = args;// + strlen(args) + 1;
   
 	WP* wp = new_wp();
-  printf("%d\n", wp->expr[31]);
+  printf("%d\n", wp->expr[3]);
 	memset(wp->expr, 0, sizeof(wp->expr));
 	strcpy(wp->expr, exprOfCmd);
 	bool success = true;
