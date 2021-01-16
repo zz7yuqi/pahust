@@ -184,12 +184,12 @@ static int cmd_w(char *args)
 	memset(wp->expr, 0, sizeof(wp->expr));
 	strcpy(wp->expr, exprOfCmd);
 	bool success = true;
+  printf("%s\n", exprOfCmd);
 	wp->value = expr(exprOfCmd, &success);
 	if(!success){
 		printf("wrong expr.\n");
 		free_wp(wp);
 	}
-  printf("wrong args.\n");
 	wp->hit = 0;
 	return 0;
 }
