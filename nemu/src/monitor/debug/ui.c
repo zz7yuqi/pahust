@@ -178,18 +178,16 @@ static int cmd_w(char *args)
     cmd_help("w");
     return 0;
   }
-	char *exprOfCmd = args;
-  
-	WP* wp = new_wp();
 
-	strcpy(wp->expr, exprOfCmd);
-	bool success = true;
-  
-	wp->value = expr(exprOfCmd, &success);
+	WP* wp = new_wp();
+  bool success = true;
+
+	wp->value = expr(args, &success);
 	if(!success){
 		printf("wrong expr.\n");
 		free_wp(wp);
 	}
+  strcpy(wp->expr, args);
 	wp->hit = 0;
 	return 0;
 }

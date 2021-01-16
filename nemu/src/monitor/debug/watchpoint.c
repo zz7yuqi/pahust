@@ -30,7 +30,6 @@ WP* new_wp() {
   free_ = free_->next;
   newWP->next = head;
   head = newWP;
-  printf("%x\n%d\n", newWP, newWP->NO);
   return newWP;
 }
 
