@@ -27,8 +27,7 @@ WP* new_wp() {
   free_ = free_->next;
   newWP->next = head;
   head = newWP;
-  printf("!\n");
-  printf("%d\n", newWP->expr[3]);
+  printf("%x\n", newWP);
   return newWP;
 }
 
