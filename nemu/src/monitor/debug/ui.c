@@ -184,7 +184,7 @@ static int cmd_w(char *args)
 	WP* wp = new_wp();
   printf("%s\n", exprOfCmd);
 	memset(wp->expr, 0, sizeof(wp->expr));
-  
+    printf("2%s\n", exprOfCmd);
 	strcpy(wp->expr, exprOfCmd);
 	bool success = true;
   
