@@ -182,6 +182,7 @@ static int cmd_w(char *args)
     return 0;
   }
   WP *wp = new_wp();
+  printf("!!!\n");
   wp->value = res;
   strcpy(wp->expr, args);
   return 0;
