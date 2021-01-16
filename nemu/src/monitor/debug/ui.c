@@ -180,7 +180,6 @@ static int cmd_w(char *args)
     return 0;
   }
 	char *exprOfCmd = args + strlen(args) + 1;
-  printf("wrong args.\n");
 	WP* wp = new_wp();
 	memset(wp->expr, 0, sizeof(wp->expr));
 	strcpy(wp->expr, exprOfCmd);
@@ -190,6 +189,7 @@ static int cmd_w(char *args)
 		printf("wrong expr.\n");
 		free_wp(wp);
 	}
+  printf("wrong args.\n");
 	wp->hit = 0;
 	return 0;
 }
