@@ -173,23 +173,18 @@ static int cmd_x(char *args){
 
 static int cmd_w(char *args)
 {
-  if (args == NULL) {
-    printf("wrong args.\n");
-    cmd_help("w");
+
+  bool success;
+  int res;
+  res = expr(args, &success);
+  if(!success){
+    printf("Wrong experssion!\n");
     return 0;
   }
-
-	WP* wp = new_wp();
-  bool success = true;
-
-	wp->value = expr(args, &success);
-	if(!success){
-		printf("wrong expr.\n");
-		free_wp(wp);
-	}
+  WP *wp = new_wp();
+  wp->value = res;
   strcpy(wp->expr, args);
-	wp->hit = 0;
-	return 0;
+  return 0;
 }
 
 static int cmd_d(char *args)
