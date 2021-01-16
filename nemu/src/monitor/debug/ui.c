@@ -180,9 +180,10 @@ static int cmd_w(char *args)
     return 0;
   }
 	char *exprOfCmd = args;// + strlen(args) + 1;
-  printf("%s\n", exprOfCmd);
+  
 	WP* wp = new_wp();
 	memset(wp->expr, 0, sizeof(wp->expr));
+  printf("%s\n", exprOfCmd);
 	strcpy(wp->expr, exprOfCmd);
 	bool success = true;
   
