@@ -180,9 +180,9 @@ static int cmd_w(char *args)
     printf("Wrong experssion!\n");
     return 0;
   }
-  WP *wp = new_wp();
-  wp->value = res;
-  strcpy(wp->expr, args);
+  WP *wp = new_wp(args, res);
+  // wp->value = res;
+  // strcpy(wp->expr, args);
   return 0;
 }
 

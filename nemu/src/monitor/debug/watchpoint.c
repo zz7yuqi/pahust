@@ -20,7 +20,7 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 /* get a free watchpoint from list free_ */
-WP* new_wp() {
+WP* new_wp(char *expr, int value) {
   if(!free_){
     printf("Wp_pool is empty!\n");
     assert(0);
@@ -30,6 +30,8 @@ WP* new_wp() {
   free_ = free_->next;
   newWP->next = head;
   head = newWP;
+  strcpy(newWP->expr, expr);
+  newWP->value = value;
   return newWP;
 }
 
