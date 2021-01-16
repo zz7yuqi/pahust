@@ -8,6 +8,8 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
+extern WP * wp_pool;
+extern WP *head, *free_;
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
