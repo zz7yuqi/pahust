@@ -173,7 +173,6 @@ static int cmd_x(char *args){
 
 static int cmd_w(char *args)
 {
-
   bool success;
   int res;
   res = expr(args, &success);
@@ -182,8 +181,8 @@ static int cmd_w(char *args)
     return 0;
   }
   WP *wp = new_wp();
-  (*wp).value = res;
-  strcpy((*wp).expr, args);
+  wp->value = res;
+  strcpy(wp->expr, args);
   return 0;
 }
 
